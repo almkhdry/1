@@ -12,37 +12,13 @@
     <link rel="stylesheet" href="styles.css"> 
     
     <style>
-        /* ==================================== */
-        /* توحيد الألوان والتصميم مع الصفحات الأخرى */
-        /* ==================================== */
-        :root {
-            --color-brand-primary: #DAA520; /* اللون الذهبي */
-            --color-light-gold: #EEDD82; /* لون ذهبي أفتح للحدود */
-            --color-header-footer-bg: #fcfcfc; /* اللون الأبيض/الكريمي الهادئ للهيدر والفوتر */
-            --color-section-bg: #f8f8f8; /* لون خلفية الأقسام */
-            --color-card-bg: #ffffff; /* لون خلفية الفورم والبطاقات (أبيض نقي) */
-            --color-text-light: #333333; /* لون النصوص الرئيسية */
-            --color-text-subtle: #555555; /* لون النصوص الثانوية */
-            --color-brand-secondary: #007bff; /* لون ثانوي (للتأكيد المرئي) */
-            --shadow-main: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --font-family-base: 'Cairo', sans-serif;
-        }
-
-        html, body {
-            overflow-x: hidden;
-            background-color: var(--color-section-bg);
-        }
-        * {
-            box-sizing: border-box;
-        }
-        
         /* === تنسيقات خاصة بصفحة إتمام الشراء === */
         
         .checkout-container {
             max-width: 700px;
             margin: 40px auto;
             padding: 30px;
-            background-color: var(--color-card-bg); /* أبيض نقي للخلفية */
+            background-color: var(--color-bg-secondary);
             border-radius: 12px;
             box-shadow: var(--shadow-main);
             border-top: 5px solid var(--color-brand-primary);
@@ -82,7 +58,6 @@
         .checkout-form textarea:focus,
         .checkout-form select:focus {
             border-color: var(--color-brand-primary);
-            box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.2); 
             outline: none;
         }
 
@@ -100,7 +75,7 @@
             display: block;
             width: 100%;
             padding: 15px 20px;
-            background-color: var(--color-brand-primary); /* اللون الذهبي */
+            background-color: #28a745; /* لون أخضر للتأكيد */
             color: white;
             border: none;
             border-radius: 6px;
@@ -109,18 +84,17 @@
             cursor: pointer;
             transition: background-color 0.3s;
             margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
         }
 
         .confirm-order-btn:hover {
-            background-color: #C5981A;
+            background-color: #218838;
         }
 
         .order-summary-box {
             padding: 15px;
             margin-bottom: 20px;
-            background-color: #fff9e6; /* لون ذهبي فاتح للخلفية */
-            border: 1px dashed var(--color-brand-primary);
+            background-color: #f9f9f9;
+            border: 1px dashed var(--color-brand-secondary);
             border-radius: 8px;
         }
         
@@ -141,10 +115,10 @@
             <a href="index.html" class="logo-area">
                 <img src="logo.png" alt="Store Logo" class="main-logo-img">
                 <div class="titles-container">
-                    <span style="display: block; font-size: 15px; font-weight: 900; color: var(--color-text-light);">
+                    <span style="display: block; font-size: 15px; font-weight: 900; color: var(--color-brand-primary);">
                         عالم الجوالات    
                     </span> 
-                    <span style="display: block; font-size: 11px; font-weight: 700; color: var(--color-text-subtle); margin-top: -1px;"> 
+                    <span style="display: block; font-size: 11px; font-weight: 700; color: var(--color-text-light); margin-top: -1px;"> 
                         متجر الإلكترونيات والهواتف النقالة
                     </span>
                 </div>
@@ -159,7 +133,7 @@
             </nav>
             <div class="cart-widget">
                 <a href="cart.html" class="cart-icon-link">
-                    <i class="fas fa-basket-shopping"></i> 
+                    <i class="fas fa-shopping-cart"></i> 
                     <span class="cart-count">0</span>
                 </a>
             </div>
@@ -175,53 +149,47 @@
             <div class="order-summary-box">
                 <h3 style="font-size: 20px; margin-bottom: 10px; color: var(--color-text-light);">ملخص السلة:</h3>
                 <p id="checkout-summary" style="font-size: 16px; color: var(--color-text-subtle);">
-                    * سيظهر ملخص المنتجات تلقائياً *
+                    * سيظهر ملخص المنتجات تلقائياً عند ربط هذه الصفحة بملف script.js *
                 </p>
-                <p style="font-size: 24px; font-weight: 900; color: var(--color-brand-primary); margin-top: 15px;">
-                    المجموع الكلي: <span id="checkout-total">0.00 ر.س</span>
+                <p style="font-size: 24px; font-weight: 900; color: #c00; margin-top: 15px;">
+                    المجموع الكلي: <span id="checkout-total">$0.00</span>
                 </p>
             </div>
             
-            <form id="checkout-form" class="checkout-form" action="https://api.web3forms.com/submit" method="POST">
-                
-                <input type="hidden" name="access_key" value="b2ed5633-7b5f-46c3-b087-5bb11a7da5a0">
-                <input type="hidden" name="subject" value="🚀 طلب شراء جديد ومؤكد من المتجر"> 
-                
-                <input type="hidden" id="order-details-hidden" name="تفاصيل_الطلبية_والإجمالي" value=""> 
-                
+            <form id="checkout-form" class="checkout-form">
                 
                 <h2 style="font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">بيانات الشحن والتواصل</h2>
                 
                 <div class="form-group">
                     <label for="full-name"><i class="fas fa-user"></i> الاسم الكامل:</label>
-                    <input type="text" id="full-name" name="الاسم_الكامل" required placeholder="أدخل اسمك الكامل">
+                    <input type="text" id="full-name" name="full-name" required placeholder="أدخل اسمك الكامل">
                 </div>
 
                 <div class="form-group">
                     <label for="phone-number"><i class="fas fa-phone"></i> رقم الهاتف:</label>
-                    <input type="tel" id="phone-number" name="رقم_الهاتف" required placeholder="مثال: 00967771234567">
+                    <input type="tel" id="phone-number" name="phone-number" required placeholder="مثال: 00967771234567">
                 </div>
                 
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني (اختياري):</label>
-                    <input type="email" id="email" name="البريد_الإلكتروني" placeholder="أدخل بريدك الإلكتروني">
+                    <input type="email" id="email" name="email" placeholder="أدخل بريدك الإلكتروني">
                 </div>
 
                 <div class="form-group">
                     <label for="city"><i class="fas fa-city"></i> المدينة / المحافظة:</label>
-                    <select id="city" name="المدينة" required>
+                    <select id="city" name="city" required>
                         <option value="" disabled selected>اختر المدينة</option>
-                        <option value="صنعاء">صنعاء</option>
-                        <option value="عدن">عدن</option>
-                        <option value="تعز">تعز</option>
-                        <option value="الحديدة">الحديدة</option>
-                        <option value="أخرى">أخرى</option>
+                        <option value="sana'a">صنعاء</option>
+                        <option value="aden">عدن</option>
+                        <option value="taiz">تعز</option>
+                        <option value="hodeidah">الحديدة</option>
+                        <option value="other">أخرى</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="address"><i class="fas fa-map-marker-alt"></i> العنوان التفصيلي:</label>
-                    <textarea id="address" name="العنوان_التفصيلي" required placeholder="الحي، الشارع، رقم المنزل/العمارة"></textarea>
+                    <textarea id="address" name="address" required placeholder="الحي، الشارع، رقم المنزل/العمارة"></textarea>
                 </div>
 
                 <button type="submit" class="confirm-order-btn">
