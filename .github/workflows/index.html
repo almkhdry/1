@@ -355,8 +355,49 @@
         <i class="fas fa-arrow-up"></i>
     </button>
     
-    <script src="js/app.js"></script> 
     <script>
+        
+        // ========================================================
+        // الحل: وظيفة تحديث عدد السلة عند تحميل الصفحة (أضيف هنا)
+        // ========================================================
+        
+        // 1. الدالة التي تقوم بجلب عدد المنتجات من التخزين المحلي
+        function getCartTotalCount() {
+            try {
+                // يفترض أن بيانات السلة مخزنة في Local Storage تحت مفتاح 'shoppingCart'
+                const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+                let totalCount = 0;
+
+                // حساب العدد الإجمالي للكميات
+                cart.forEach(item => {
+                    // نجمع الكمية المخزنة، أو نفترض 1 ككمية افتراضية
+                    totalCount += item.quantity || 1; 
+                });
+
+                return totalCount;
+
+            } catch (e) {
+                // في حال حدوث خطأ، نرجع القيمة 0
+                return 0; 
+            }
+        }
+
+        // 2. الدالة التي تقوم بتحديث العنصر في شريط التنقل العلوي
+        function updateCartDisplay() {
+            const countElement = document.querySelector('.cart-count');
+            if (countElement) {
+                countElement.textContent = getCartTotalCount();
+            }
+        }
+
+        // 3. تحديث العدد فوراً عند اكتمال تحميل محتوى الصفحة
+        // سيؤدي هذا إلى ظهور العدد الفعلي للسلة بدلاً من الصفر الثابت
+        document.addEventListener('DOMContentLoaded', updateCartDisplay); 
+
+        // ========================================================
+        // الكود الأصلي والمساعد (تم الاحتفاظ به)
+        // ========================================================
+
         // دالة التمرير الأفقي لقسم العروض
         function scrollOffers(direction) {
             const container = document.getElementById('offersContainer');
