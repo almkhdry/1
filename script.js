@@ -1,278 +1,351 @@
-/* ==========================================================
-   ملف script.js - الوظائف الرئيسية للمتجر والسلة
-   ========================================================== */
+/* =========================================================
+   SCRIPT.JS - الوظائف الرئيسية لمتجر عالم الجوالات (النسخة النهائية والموحدة)
+   يشمل جميع التصحيحات والتعديلات الأخيرة.
+   ========================================================= */
 
-// 1. المتغيرات الأساسية وتحميل السلة
-let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-const PRODUCTS_JSON_URL = 'products.json'; // تأكد من أن هذا المسار صحيح
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // 1. تعريف وظيفة تنسيق العملة
+    const formatCurrency = (amount) => {
+        const number = parseFloat(amount);
+        return `$${isNaN(number) ? '0.00' : number.toFixed(2)}`;
+    };
 
-// 2. دالة لحفظ السلة في التخزين المحلي
-const saveCart = () => {
-    localStorage.setItem('shoppingCart', JSON.stringify(cart));
-};
+    // 2. إدارة السلة (التحميل والحفظ والحساب)
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-// 3. دالة لتنسيق العملة (افتراض: ريال سعودي)
-const formatCurrency = (amount) => {
-    // يمكنك تعديل العملة هنا:
-    return parseFloat(amount).toFixed(2) + ' ر.س'; 
-};
+    const saveCart = () => {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        
+        // إعادة عرض محتويات السلة والملخص بعد كل تعديل
+        if (document.getElementById('cart-items')) {
+            renderCartItems();
+        }
+        if (document.getElementById('checkout-form')) {
+            updateCheckoutSummary();
+        }
+    };
 
-// 4. دالة تحديث عداد السلة (تستخدم في كل الصفحات)
-const updateCartCount = () => {
-    const cartCountElement = document.querySelector('.cart-count');
-    if (cartCountElement) {
-        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-        cartCountElement.textContent = totalItems;
-    }
-};
+    const calculateCartTotal = () => {
+        return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
 
-// 5. دالة حساب المجموع الكلي للسلة
-const calculateCartTotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-};
+    const updateCartCount = () => {
+        const cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+            const totalItems = cart.reduce((count, item) => count + item.quantity, 0);
+            cartCountElement.textContent = totalItems;
+        }
+    };
 
-// 6. دالة إضافة منتج إلى السلة
-const addToCart = (product) => {
-    const existingItem = cart.find(item => item.id === product.id);
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({ ...product, quantity: 1 });
-    }
-    saveCart();
-    updateCartCount();
-    alert(`تم إضافة ${product.name} إلى السلة بنجاح!`);
-};
+    // 3. وظيفة إضافة منتج إلى السلة
+    const addToCart = (productId, name, price, quantity) => {
+        const existingItem = cart.find(item => item.id === productId);
 
-// 7. وظيفة جلب المنتجات وربط زر الإضافة (تستخدم في صفحات المنتجات)
-const fetchProductsAndSetupButtons = async () => {
-    try {
-        const response = await fetch(PRODUCTS_JSON_URL);
-        if (!response.ok) throw new Error('فشل في جلب المنتجات');
-        const products = await response.json();
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            cart.push({ id: productId, name, price, quantity });
+        }
+        
+        saveCart();
+        alert(`تمت إضافة ${quantity} من ${name} إلى سلة المشتريات بنجاح!`);
+    };
 
-        // ربط أزرار الإضافة في الصفحة
-        const buyButtons = document.querySelectorAll('.add-to-cart-btn');
-        buyButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const productId = e.target.closest('.product-card, .detail-card').dataset.productId;
-                const product = products.find(p => p.id === productId);
-                if (product) {
-                    addToCart(product);
+    // 4. معالج النقر على زر "أضف إلى السلة" (في index.html)
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+
+            const productId = card.dataset.productId;
+            
+            const priceText = card.dataset.price;
+            const price = priceText ? parseFloat(priceText) : 0;
+            
+            const productNameElement = card.querySelector('h3');
+            const name = productNameElement ? productNameElement.textContent.trim() : 'منتج غير معروف';
+
+            const qtyInput = card.querySelector(`input[type="number"]`); 
+            const quantity = qtyInput ? parseInt(qtyInput.value) : 1;
+            
+            if (productId && price > 0 && quantity > 0) {
+                addToCart(productId, name, price, quantity);
+            } else {
+                alert('عذراً، لا يمكن إضافة هذا المنتج حالياً. يرجى التأكد من توفر السعر والكمية.');
+            }
+        });
+    });
+    
+    // 5. وظيفة تحديث الكمية في صفحة السلة (cart.html)
+    const updateCartItemQuantity = (productId, newQuantity) => {
+        const item = cart.find(item => item.id === productId);
+        if (item) {
+            item.quantity = parseInt(newQuantity);
+            if (item.quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                saveCart();
+            }
+        }
+    };
+
+    // 6. وظيفة حذف منتج من السلة (cart.html)
+    const removeFromCart = (productId) => {
+        cart = cart.filter(item => item.id !== productId);
+        saveCart();
+    };
+
+    // 7. وظيفة عرض محتويات السلة في صفحة cart.html
+    const renderCartItems = () => {
+        const cartItemsContainer = document.getElementById('cart-items'); 
+        const cartTotalElement = document.getElementById('cart-total');   
+        if (!cartItemsContainer || !cartTotalElement) return;
+
+        cartItemsContainer.innerHTML = ''; 
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p class="text-center" style="font-size: 18px; color: #888;">سلة مشترياتك فارغة حالياً.</p>';
+            cartTotalElement.textContent = formatCurrency(0);
+            const checkoutLink = document.querySelector('.checkout-link');
+            if(checkoutLink) checkoutLink.style.display = 'none';
+            return;
+        }
+        
+        const checkoutLink = document.querySelector('.checkout-link');
+        if(checkoutLink) checkoutLink.style.display = 'block';
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            
+            const imagePath = `img/products/${item.id}.png`; 
+
+            const itemHTML = `
+                <div class="cart-item" data-product-id="${item.id}">
+                    <div class="item-details">
+                        <img src="${imagePath}" alt="${item.name}" onerror="this.onerror=null;this.src='placeholder.png';" style="max-width: 60px;">
+                        <h3>${item.name}</h3>
+                    </div>
+                    
+                    <div class="item-price">
+                         <span class="price-label">السعر: </span> 
+                         <span class="price-value">${formatCurrency(item.price)}</span>
+                    </div>
+
+                    <div class="quantity-control">
+                        <label for="qty-${item.id}">الكمية:</label>
+                        <input type="number" id="qty-${item.id}" class="item-quantity-input" value="${item.quantity}" min="1" data-product-id="${item.id}">
+                    </div>
+
+                    <div class="item-total">
+                        <span class="total-label">المجموع: </span> 
+                        <span class="total-amount">${formatCurrency(itemTotal)}</span>
+                    </div>
+                    
+                    <button class="delete-item-btn" data-product-id="${item.id}" title="حذف المنتج">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+            cartItemsContainer.insertAdjacentHTML('beforeend', itemHTML);
+        });
+
+        // تحديث المجموع الكلي
+        cartTotalElement.textContent = formatCurrency(calculateCartTotal());
+        
+        // ربط الأحداث بمحدثات الكمية وأزرار الحذف
+        document.querySelectorAll('.item-quantity-input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const productId = e.target.dataset.productId;
+                const newQuantity = parseInt(e.target.value);
+                if (newQuantity >= 1) {
+                     updateCartItemQuantity(productId, newQuantity);
+                } else {
+                    e.target.value = 1;
+                    updateCartItemQuantity(productId, 1);
                 }
             });
         });
-
-    } catch (error) {
-        console.error("خطأ في جلب المنتجات:", error);
-    }
-};
-
-/* =======================================
-   وظائف صفحة السلة (cart.html)
-   ======================================= */
-
-// 8. دالة عرض محتوى السلة في صفحة cart.html
-const renderCartItems = () => {
-    const cartItemsContainer = document.getElementById('cart-items');
-    const cartTotalElement = document.getElementById('cart-total');
-    
-    if (!cartItemsContainer || !cartTotalElement) return;
-
-    if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p class="empty-cart-message">سلة المشتريات فارغة. <a href="index.html">ابدأ بالتسوق الآن!</a></p>';
-        cartTotalElement.textContent = formatCurrency(0);
-        return;
-    }
-
-    let itemsHTML = '';
-    cart.forEach(item => {
-        itemsHTML += `
-            <div class="cart-item" data-product-id="${item.id}">
-                <img src="${item.imageUrl || 'default-image.jpg'}" alt="${item.name}" class="item-image">
-                <div class="item-details">
-                    <h4 class="item-name">${item.name}</h4>
-                    <p class="item-price">${formatCurrency(item.price)}</p>
-                </div>
-                <div class="item-quantity-control">
-                    <button class="quantity-btn decrease-qty" data-id="${item.id}">-</button>
-                    <span class="item-qty">${item.quantity}</span>
-                    <button class="quantity-btn increase-qty" data-id="${item.id}">+</button>
-                </div>
-                <p class="item-subtotal">${formatCurrency(item.price * item.quantity)}</p>
-                <button class="remove-btn" data-id="${item.id}">
-                    <i class="fas fa-trash"></i> إزالة
-                </button>
-            </div>
-        `;
-    });
-
-    cartItemsContainer.innerHTML = itemsHTML;
-    cartTotalElement.textContent = formatCurrency(calculateCartTotal());
-    
-    // ربط مستمعي الأحداث لأزرار الكمية والإزالة
-    document.querySelectorAll('.quantity-btn').forEach(btn => btn.addEventListener('click', handleQuantityChange));
-    document.querySelectorAll('.remove-btn').forEach(btn => btn.addEventListener('click', removeItem));
-};
-
-// دالة لمعالجة تغيير الكمية
-const handleQuantityChange = (e) => {
-    const itemId = e.target.dataset.id;
-    const isIncrease = e.target.classList.contains('increase-qty');
-    
-    const itemIndex = cart.findIndex(item => item.id === itemId);
-    if (itemIndex > -1) {
-        if (isIncrease) {
-            cart[itemIndex].quantity += 1;
-        } else if (cart[itemIndex].quantity > 1) {
-            cart[itemIndex].quantity -= 1;
-        }
-        saveCart();
-        updateCartCount();
-        renderCartItems(); // إعادة رسم السلة لتحديث المبالغ الفرعية والنهائية
-    }
-};
-
-// دالة لإزالة المنتج بالكامل
-const removeItem = (e) => {
-    const itemId = e.target.dataset.id;
-    cart = cart.filter(item => item.id !== itemId);
-    saveCart();
-    updateCartCount();
-    renderCartItems();
-};
-
-
-/* =======================================
-   وظائف صفحة إتمام الشراء (checkout.html)
-   ======================================= */
-
-// 10. وظيفة تحديث ملخص الطلب في صفحة checkout.html
-const updateCheckoutSummary = () => {
-    const summaryElement = document.getElementById('checkout-summary');
-    const totalElement = document.getElementById('checkout-total');
-    const checkoutForm = document.getElementById('checkout-form');
-    
-    if (!summaryElement || !totalElement) return;
-    
-    if (cart.length === 0) {
-        summaryElement.innerHTML = '<p style="color: red; font-weight: 700;">سلة المشتريات فارغة! يرجى العودة لصفحة <a href="cart.html">السلة</a>.</p>';
-        totalElement.textContent = formatCurrency(0);
-        if(checkoutForm) checkoutForm.querySelector('.confirm-order-btn').disabled = true;
-        return;
-    }
-    
-    if(checkoutForm) checkoutForm.querySelector('.confirm-order-btn').disabled = false;
-
-    let summaryHTML = '<ul style="list-style: none; padding-right: 0;">';
-    cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        summaryHTML += `
-            <li style="margin-bottom: 5px; list-style: disc; margin-right: 20px; font-size: 15px;">
-                ${item.name} (${item.quantity} × ${formatCurrency(item.price)}) = <span style="font-weight: 700; color: var(--color-brand-primary);">${formatCurrency(itemTotal)}</span>
-            </li>
-        `;
-    });
-    summaryHTML += '</ul>';
-
-    summaryElement.innerHTML = summaryHTML;
-    totalElement.textContent = formatCurrency(calculateCartTotal());
-};
-
-// 11. معالج إرسال نموذج إتمام الشراء (في checkout.html) - الآن يرسل عبر Web3Forms
-const checkoutForm = document.getElementById('checkout-form');
-if (checkoutForm) {
-    
-    const hiddenOrderDetails = document.getElementById('order-details-hidden');
-    
-    checkoutForm.addEventListener('submit', (e) => {
         
-        // 1. تحقق من السلة أولاً
+        document.querySelectorAll('.delete-item-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const productId = e.target.closest('.delete-item-btn').dataset.productId;
+                if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                   removeFromCart(productId);
+                }
+            });
+        });
+    };
+    
+    // *** NEW: تفعيل زر "إتمام الشراء" في صفحة السلة للنقل إلى checkout.html ***
+    const checkoutBtn = document.getElementById('checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length > 0) {
+                window.location.href = 'checkout.html';
+            } else {
+                alert('سلة المشتريات فارغة. لا يمكن إتمام الشراء.');
+            }
+        });
+    }
+
+    /* =======================================
+       وظائف صفحة إتمام الشراء (checkout.html)
+       ======================================= */
+       
+    // 8. وظيفة تحديث ملخص الطلب في صفحة checkout.html
+    const updateCheckoutSummary = () => {
+        const summaryElement = document.getElementById('checkout-summary');
+        const totalElement = document.getElementById('checkout-total');
+        const checkoutForm = document.getElementById('checkout-form');
+        
+        if (!summaryElement || !totalElement) return;
+        
         if (cart.length === 0) {
-             e.preventDefault(); 
-             alert('سلة المشتريات فارغة، لا يمكن إتمام الطلب.');
-             return;
+            summaryElement.innerHTML = '<p style="color: red; font-weight: 700;">سلة المشتريات فارغة! يرجى العودة لصفحة <a href="cart.html">السلة</a>.</p>';
+            totalElement.textContent = formatCurrency(0);
+            if(checkoutForm) checkoutForm.querySelector('.confirm-order-btn').disabled = true;
+            return;
         }
         
-        // 2. تجميع تفاصيل الطلب بشكل نصي موحد (وهذا ما سيظهر لك في الإيميل)
-        const orderItemsText = cart.map(item => 
-            `\n - ${item.name} (الكمية: ${item.quantity} | السعر: ${formatCurrency(item.price)}) | الإجمالي: ${formatCurrency(item.price * item.quantity)}`
-        ).join('');
-        
-        const finalMessage = `
-*--- تفاصيل الطلبات ---*
-${orderItemsText}
--------------------------
-*المجموع الكلي:* ${formatCurrency(calculateCartTotal())}
+        if(checkoutForm) checkoutForm.querySelector('.confirm-order-btn').disabled = false;
+
+        let summaryHTML = '<ul style="list-style: none; padding-right: 0;">';
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            summaryHTML += `
+                <li style="margin-bottom: 5px; list-style: disc; margin-right: 20px; font-size: 15px;">
+                    ${item.name} (${item.quantity} × ${formatCurrency(item.price)}) = <span style="font-weight: 700; color: var(--color-brand-secondary);">${formatCurrency(itemTotal)}</span>
+                </li>
+            `;
+        });
+        summaryHTML += '</ul>';
+
+        summaryElement.innerHTML = summaryHTML;
+        totalElement.textContent = formatCurrency(calculateCartTotal());
+    };
+    
+    // 9. معالج إرسال نموذج إتمام الشراء (في checkout.html)
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+
+            if (cart.length === 0) {
+                alert('سلة المشتريات فارغة، لا يمكن إتمام الطلب.');
+                return;
+            }
+            
+            // 10. جمع بيانات العميل
+            const customerData = {
+                name: document.getElementById('full-name').value,
+                phone: document.getElementById('phone-number').value,
+                email: document.getElementById('email').value,
+                city: document.getElementById('city').value,
+                address: document.getElementById('address').value,
+            };
+
+            // 11. تجميع تفاصيل الطلب
+            const orderDetails = cart.map(item => ({
+                product: item.name,
+                quantity: item.quantity,
+                price: formatCurrency(item.price),
+                total: formatCurrency(item.price * item.quantity)
+            }));
+            
+            const finalTotal = formatCurrency(calculateCartTotal());
+
+            // 12. بناء رسالة الطلب النهائية
+            let message = `
+========================================
+    🎉 طلب جديد من متجر عالم الجوالات 🎉
+========================================
+✅ بيانات العميل:
+الاسم: ${customerData.name}
+الهاتف: ${customerData.phone}
+البريد: ${customerData.email || 'لا يوجد'}
+المدينة: ${customerData.city}
+العنوان: ${customerData.address}
+
+🛒 تفاصيل الطلبات:
+${orderDetails.map(item => 
+    ` - ${item.product} | الكمية: ${item.quantity} | الإجمالي: ${item.total}`
+).join('\n')}
+
+💰 المجموع الكلي للطلبية: ${finalTotal}
+========================================
 `;
-        
-        // 3. وضع الرسالة المجمعة في الحقل المخفي قبل الإرسال الفعلي
-        if (hiddenOrderDetails) {
-            hiddenOrderDetails.value = finalMessage.trim();
-        }
 
-        // 4. مسح السلة بعد نجاح الإرسال
-        // نستخدم setTimeout لضمان أن المتصفح قد بدأ بإرسال البيانات قبل مسح السلة
-        setTimeout(() => {
-             // عرض رسالة نجاح للعميل
-            alert('🎉 تم تسجيل طلبك بنجاح! سيتم التواصل معك قريباً لتأكيد تفاصيل الشحن. شكراً لك.');
+            console.log(message); 
             
-            // 5. مسح السلة بعد التأكيد
+            alert('تم تأكيد طلبك بنجاح! سيتم التواصل معك قريباً لتأكيد تفاصيل الشحن.');
+
+            // 14. مسح السلة بعد إتمام الطلب
             cart = [];
-            saveCart();
+            saveCart(); 
             
-            // تحديث عداد السلة بعد المسح
-            updateCartCount();
-
-        }, 500); // 0.5 ثانية تأخير للسماح بالإرسال
+            // إعادة توجيه لصفحة الاتصال بنا لتأكيد الطلب
+             setTimeout(() => window.location.href = 'contact.html', 2000); 
+        });
         
-        // لا نستخدم e.preventDefault() للسماح لـ Web3Forms بإرسال النموذج تلقائياً
-    });
-    
-    // تحديث الملخص عند تحميل الصفحة
-    updateCheckoutSummary();
-}
-
-
-/* =======================================
-   وظائف عامة وإطلاق البرنامج
-   ======================================= */
-
-// 12. دالة العودة للأعلى (Top Function)
-function topFunction() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
-
-// 13. إظهار زر العودة للأعلى عند التمرير
-window.onscroll = function() {scrollFunction()};
-const scrollFunction = () => {
-    const backToTop = document.getElementById("backToTop");
-    if (backToTop) {
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-            backToTop.style.display = "block";
-        } else {
-            backToTop.style.display = "none";
-        }
+        // تحديث الملخص عند تحميل الصفحة
+        updateCheckoutSummary();
     }
-};
 
-// 14. إطلاق الوظائف عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', () => {
-    // تحديث العداد في جميع الصفحات
-    updateCartCount(); 
+
+    /* =======================================
+       وظائف عامة (UI/UX)
+       ======================================= */
+       
+    // 15. وظيفة زر العودة للأعلى
+    const backToTopButton = document.getElementById("backToTop");
+    if (backToTopButton) {
+        const scrollFunction = () => {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                backToTopButton.style.display = "block";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        };
+        window.onscroll = scrollFunction;
+        scrollFunction(); 
+
+        window.topFunction = () => {
+            document.body.scrollTop = 0; 
+            document.documentElement.scrollTop = 0; 
+        };
+    }
+
+    // 16. وظيفة فتح/إغلاق القائمة في وضع الجوال
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainNav = document.querySelector('.main-nav');
     
-    // إطلاق جلب المنتجات وربط الأزرار (في صفحات المنتجات)
-    fetchProductsAndSetupButtons(); 
+    if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            if(mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    }
 
-    // عرض محتويات السلة (إذا كنا في cart.html)
+    // 17. تعيين السنة الحالية في الفوتر
+    const currentYearSpan = document.getElementById('current-year');
+    if (currentYearSpan) {
+        currentYearSpan.textContent = new Date().getFullYear();
+    }
+    
+    // 18. تحديث حالة السلة عند تحميل أي صفحة
+    updateCartCount();
+    
+    // 19. تفعيل وظيفة عرض السلة إذا كنا في cart.html
     if (document.getElementById('cart-items')) {
         renderCartItems();
-    }
-    
-    // تحديث السنة في الفوتر (إذا كانت موجودة)
-    const currentYearElement = document.getElementById('current-year');
-    if (currentYearElement) {
-        currentYearElement.textContent = new Date().getFullYear();
     }
 });
