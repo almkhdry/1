@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -156,40 +157,48 @@
                 </p>
             </div>
             
-                           
                 <form action="https://api.web3forms.com/submit" method="POST">
                     <input type="hidden" name="access_key" value="b2ed5633-7b5f-46c3-b087-5bb11a7da5a0">
                     <input type="hidden" name="subject" value="رسالة جديدة من متجر عالم الجوالات">
-                    
-                    <div class="form-group">
-                        <label for="name">الاسم الكريم:</label>
-                        <input type="text" id="name" name="الاسم" required placeholder="أدخل اسمك الكامل">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">البريد الإلكتروني:</label>
-                        <input type="email" id="email" name="البريد الإلكتروني" required placeholder="بريدك الإلكتروني للتواصل">
-                    </div>
-                    <div class="form-group">
-                        <label for="service">سبب التواصل:</label>
-                        <select id="service" name="نوع_الطلب" required>
-                            <option value="" disabled selected>-- اختر نوع الطلب --</option>
-                            <option value="استفسار عن منتج">استفسار عن منتج</option>
-                            <option value="طلب دعم فني / ضمان">طلب دعم فني / ضمان</option>
-                            <option value="استفسار حول الطلب والشحن">استفسار حول الطلب والشحن</option>
-                            <option value="أخرى">أخرى</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">رسالتك:</label>
-                        <textarea id="message" name="الرسالة" required placeholder="اكتب رسالتك بالتفصيل هنا..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="submit-button">إرسال الرسالة <i class="fas fa-paper-plane"></i></button>
-                    
-                </form>
-            </div>
-            
+                     
+                <div class="form-group">
+                    <label for="full-name"><i class="fas fa-user"></i> الاسم الكامل:</label>
+                    <input type="text" id="full-name" name="full-name" required placeholder="أدخل اسمك الكامل">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone-number"><i class="fas fa-phone"></i> رقم الهاتف:</label>
+                    <input type="tel" id="phone-number" name="phone-number" required placeholder="مثال: 00967771234567">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني (اختياري):</label>
+                    <input type="email" id="email" name="email" placeholder="أدخل بريدك الإلكتروني">
+                </div>
+
+                <div class="form-group">
+                    <label for="city"><i class="fas fa-city"></i> المدينة / المحافظة:</label>
+                    <select id="city" name="city" required>
+                        <option value="" disabled selected>اختر المدينة</option>
+                        <option value="sana'a">صنعاء</option>
+                        <option value="aden">عدن</option>
+                        <option value="taiz">تعز</option>
+                        <option value="hodeidah">الحديدة</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="address"><i class="fas fa-map-marker-alt"></i> العنوان التفصيلي:</label>
+                    <textarea id="address" name="address" required placeholder="الحي، الشارع، رقم المنزل/العمارة"></textarea>
+                </div>
+
+                <button type="submit" class="confirm-order-btn">
+                    <i class="fas fa-money-check-alt"></i> تأكيد الطلب وإرساله
+                </button>
+            </form>
         </div>
+        
     </main>
     
     <hr style="border-top: 2px solid var(--color-brand-primary); width: 60%; margin: 30px auto 15px; opacity: 0.3;">
