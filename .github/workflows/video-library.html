@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شروحات المنتجات - مكتبة الفيديو - عالم الجوالات</title>
+    <meta name="description" content="مكتبة فيديوهات شاملة لشروحات ومراجعات أحدث الهواتف والملحقات المتوفرة في المتجر.">
+    <link rel="icon" type="image/png" href="favicon-new.png"> 
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="styles.css"> 
+
+    <style>
+        /* ==================================== */
+        /* توحيد الألوان والتصميم مع الصفحات الأخرى */
+        /* ==================================== */
+        
+        /* تعريف الألوان الموحدة (مع لون خاص للفيديو) */
+        :root {
+            --color-brand-primary: #DAA520; /* اللون الذهبي */
+            --color-light-gold: #EEDD82; /* لون ذهبي أفتح للحدود */
+            --color-header-footer-bg: #fcfcfc; /* اللون الأبيض/الكريمي الهادئ للهيدر والفوتر */
+            --color-card-bg: #ffffff; /* لون خلفية البطاقات (أبيض نقي) */
+            --color-section-bg: #f8f8f8; /* لون خلفية الأقسام */
+            --color-video-highlight: #CC0000; /* أحمر داكن لعلامات الفيديو والتشغيل */
+        }
+        
+        /* تطبيق الاستجابة ومنع التجاوز */
+        html, body {
+            overflow-x: hidden;
+            background-color: var(--color-section-bg);
+        }
+        * {
+            box-sizing: border-box;
+        }
+
+        /* توحيد الهيدر والفوتر */
+        .main-header,
+        .main-footer { 
+            background-color: var(--color-header-footer-bg) !important; 
+        }
+
+        /* توحيد ألوان نصوص الهيدر والفوتر */
+        .main-header .titles-container span,
+        .main-footer a,
+        .main-footer .mb-0 {
+             color: #333333 !important; 
+        }
+        .main-footer .social-icons a i {
+             color: var(--color-brand-primary); 
+        }
+        
+        /* تنسيق رأس الصفحة (Category Header) */
+        .category-header {
+            background-color: var(--color-section-bg) !important; 
+            padding: 30px 15px;
+            text-align: center;
+        }
+        .category-header h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        /* تغيير لون أيقونة الفيديو */
+        .category-header h1 i.fas.fa-video {
+            color: var(--color-video-highlight) !important; 
+        }
+        .category-header p {
+            color: #555;
+            font-size: 16px;
+        }
+        
+        /* تنسيق أقسام الفيديو */
+        .video-section {
+            padding: 30px 0;
+            background-color: var(--color-section-bg);
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        /* تنسيق العنوان الفرعي */
+        .video-section h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--color-brand-primary) !important; /* لون ذهبي */
+            border-bottom: 3px solid var(--color-light-gold) !important; /* حدود ذهبية */
+            padding-bottom: 10px; 
+            margin-bottom: 20px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        /* تنسيق بطاقات الفيديو */
+        .video-card {
+            background-color: var(--color-card-bg); /* أبيض نقي */
+            border: 1px solid var(--color-light-gold); /* حدود ذهبية خفيفة */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* تنسيق أيقونة التشغيل */
+        .play-icon {
+            font-size: 50px;
+            color: white;
+            opacity: 0.9;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            transition: transform 0.3s;
+        }
+        
+        .video-card:hover .play-icon {
+            transform: translate(-50%, -50%) scale(1.1);
+            color: var(--color-video-highlight); /* أحمر بارز عند التحويم */
+        }
+        
+        .video-info {
+            padding: 15px;
+            text-align: right;
+        }
+        
+        .video-info h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .video-info p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo-area">
+                <img src="logo.png" alt="Store Logo" class="main-logo-img">
+                <div class="titles-container">
+                    <span style="display: block; font-size: 15px; font-weight: 900; color: #333333;">
+                        عالم الجوالات    
+                    </span> 
+                    <span style="display: block; font-size: 11px; font-weight: 700; color: #555555; margin-top: -1px;"> 
+                        متجر الإلكترونيات والهواتف النقالة
+                    </span>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-mobile-alt"></i>الأجهزة</a></li>
+                    <li><a href="accessories.html"><i class="fas fa-headphones"></i>الملحقات</a></li> 
+                    <li><a href="video-library.html" class="video-link active"><i class="fas fa-video"></i>شروحات المنتجات</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope"></i>الاتصال بنا</a></li>
+                </ul>
+            </nav>
+            <div class="cart-widget">
+                <a href="cart.html" class="cart-icon-link">
+                    <i class="fas fa-shopping-cart"></i> 
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+            <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <section class="category-header">
+        <div class="container">
+            <h1>مكتبة <i class="fas fa-video" style="font-size: 38px;"></i> شروحات المنتجات</h1>
+            <p>شاهد أحدث مراجعات الهواتف، مقارنات شاملة، وطرق استخدام الملحقات الجديدة.</p>
+        </div>
+    </section>
+
+    <main class="container">
+        
+        <section class="video-section">
+            <h2>
+                🎥 أحدث المراجعات
+            </h2>
+            <div class="video-grid">
+                
+                <a href="https://youtube.com/shorts/MrScr-ZSMMo?si=L9Au0u43vniiyLIN" target="_blank" class="video-card">
+                    <div class="video-thumbnail-container">
+                        <img src="video-iphone15.jpg" alt="مراجعة iPhone 15 Pro Max">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="video-info">
+                        <h3>مراجعة شاملة: iPhone 15 Pro Max</h3>
+                        <p>نظرة متعمقة على كاميرا التيتانيوم والأداء الاحترافي.</p>
+                    </div>
+                </a>
+                
+                <a href="https://youtu.be/fVSpg5WMDUw?si=5D2R20B7hmjL7hkS" target="_blank" class="video-card">
+                    <div class="video-thumbnail-container">
+                        <img src="samsung-s24-ultra.jpg" alt="مقارنة Samsung Galaxy S24 Ultra">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="video-info">
+                        <h3>مقارنة: Galaxy S24 Ultra ضد المنافسين</h3>
+                        <p>اختبار الذكاء الاصطناعي والكاميرا في ظروف الإضاءة المختلفة.</p>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/_pD_9zpg7gE?si=r4j5KJ4Yz7DvIvO6" target="_blank" class="video-card">
+                    <div class="video-thumbnail-container">
+                        <img src="images-charger.jpg" alt="أفضل شاحن ">
+                        <i class="fas fa-play play-icon"></i>
+                    </div>
+                    <div class="video-info">
+                        <h3>أفضل شاحن لعام 2025</h3>
+                        <p>نصائح لاختيار الشاحن السريع والآمن لجوالك.</p>
+                    </div>
+                </a>
+                
+            </div>
+        </section>
+
+    </main>
+    
+    <hr style="border-top: 2px solid var(--color-brand-primary); width: 60%; margin: 30px auto 15px; opacity: 0.3;">
+    
+    <footer class="main-footer" id="contact-footer">
+        <div class="container text-center">
+             <div class="social-icons">
+                <a href="https://www.facebook.com/" target="_blank" title="Facebook Page"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/" target="_blank" title="X / Twitter Page"><i class="fab fa-twitter"></i></a>
+                 <a href="https://telegram.org/" target="_blank" title="Telegram Page"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://www.youtube.com/" target="_blank" title="YouTube Channel"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 14px; margin-bottom: 5px;">
+                <a href="privacy-policy.html" style="text-decoration: none;">سياسة الخصوصية</a>
+                <span style="margin: 0 10px; color: #555555;">|</span>
+                 <a href="contact.html" style="text-decoration: none;">اتصل بنا</a>
+            </p>
+            <p class="mb-0" style="font-size: 14px; color: #555555;">
+            جميع الحقوق محفوظة &copy;  <span id="current-year"></span>-M.M.S.ALMKHDRI
+            </p>
+        </div>
+    </footer>
+
+    <button onclick="topFunction()" id="backToTop" title="العودة للأعلى">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <script>
+        // دالة العودة للأعلى
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+        // تحديث السنة في الفوتر
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
