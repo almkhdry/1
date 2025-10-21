@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سياسة الخصوصية - عالم الجوالات</title>
+    <meta name="description" content="سياسة الخصوصية وكيفية جمع واستخدام وحماية بيانات المستخدمين في متجر عالم الجوالات.">
+    <link rel="icon" type="image/png" href="favicon-new.png"> 
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="styles.css"> 
+    
+    <style>
+        /* ==================================== */
+        /* توحيد الألوان والتصميم مع الصفحات الأخرى */
+        /* ==================================== */
+        
+        /* تعريف الألوان الموحدة */
+        :root {
+            --color-brand-primary: #DAA520; /* اللون الذهبي */
+            --color-light-gold: #EEDD82; /* لون ذهبي أفتح للحدود */
+            --color-header-footer-bg: #fcfcfc; /* اللون الأبيض/الكريمي الهادئ للهيدر والفوتر */
+            --color-section-bg: #f8f8f8; /* لون خلفية الأقسام */
+            --color-card-bg: #ffffff; /* لون خلفية محتوى السياسة (أبيض نقي) */
+            --color-text-subtle: #666;
+            --color-text-light: #333;
+        }
+        
+        /* تطبيق الاستجابة ومنع التجاوز */
+        html, body {
+            overflow-x: hidden;
+            background-color: var(--color-section-bg);
+        }
+        * {
+            box-sizing: border-box;
+        }
+
+        /* توحيد الهيدر والفوتر */
+        .main-header,
+        .main-footer { 
+            background-color: var(--color-header-footer-bg) !important; 
+        }
+
+        /* توحيد ألوان نصوص الهيدر والفوتر */
+        .main-header .titles-container span,
+        .main-footer a,
+        .main-footer .mb-0 {
+             color: #333333 !important; 
+        }
+        .main-footer .social-icons a i {
+             color: var(--color-brand-primary); 
+        }
+
+        /* تنسيق رأس الصفحة (Category Header) */
+        .category-header {
+            background-color: var(--color-section-bg) !important; 
+        }
+        .category-header h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 900;
+        }
+        /* أيقونة الدرع باللون الذهبي */
+        .category-header h1 i.fas.fa-shield-alt {
+            color: var(--color-brand-primary) !important; 
+        }
+        .category-header p {
+            color: #555;
+            font-size: 16px;
+        }
+        
+        /* === تنسيقات محتوى السياسة === */
+
+        .policy-content {
+            background-color: var(--color-card-bg); /* خلفية بيضاء ناصعة */
+            padding: 40px;
+            margin: 40px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-top: 5px solid var(--color-brand-primary); /* شريط ذهبي علوي */
+            color: var(--color-text-light);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .policy-content h2 {
+            font-size: 24px;
+            color: var(--color-brand-primary); /* العناوين باللون الذهبي */
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--color-light-gold); /* خط ذهبي خفيف تحت العناوين */
+            font-weight: 900;
+        }
+
+        .policy-content p {
+            margin-bottom: 15px;
+        }
+
+        .policy-content ul {
+            padding-right: 25px;
+            margin-bottom: 25px;
+            list-style-type: disc;
+        }
+
+        .policy-content li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        /* التجاوب */
+        @media (max-width: 768px) {
+            .policy-content {
+                padding: 20px;
+                margin: 20px 10px;
+            }
+            .policy-content h2 {
+                font-size: 20px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo-area">
+                <img src="logo.png" alt="Store Logo" class="main-logo-img">
+                <div class="titles-container">
+                    <span style="display: block; font-size: 15px; font-weight: 900; color: #333333;">
+                        عالم الجوالات    
+                    </span> 
+                    <span style="display: block; font-size: 11px; font-weight: 700; color: #555555; margin-top: -1px;"> 
+                        متجر الإلكترونيات والهواتف النقالة
+                    </span>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-mobile-alt"></i>الأجهزة</a></li>
+                    <li><a href="accessories.html"><i class="fas fa-headphones"></i>الملحقات</a></li> 
+                    <li><a href="video-library.html" class="video-link"><i class="fas fa-video"></i>شروحات المنتجات</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope"></i>الاتصال بنا</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+        </div>
+    </header>
+
+    <section class="category-header">
+        <div class="container">
+            <h1><i class="fas fa-shield-alt" style="font-size: 38px;"></i> سياسة الخصوصية</h1>
+            <p>نحن ملتزمون بحماية بياناتك وخصوصيتك. تفضل بقراءة سياساتنا.</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="policy-content">
+            
+            <p style="font-weight: 700; color: var(--color-brand-primary);">
+                تاريخ السريان: 15 أكتوبر 2025
+            </p>
+            <p>
+                في متجر "عالم الجوالات"، خصوصية زوارنا ومستخدمينا لها أهمية قصوى بالنسبة لنا. تشرح هذه الوثيقة أنواع المعلومات الشخصية التي نجمعها وكيف يتم استخدامها وحمايتها.
+            </p>
+
+            <h2>1. جمع واستخدام المعلومات</h2>
+            <p>
+                نقوم بجمع أنواع مختلفة من المعلومات لأغراض متعددة لتوفير وتحسين خدماتنا لك.
+            </p>
+            <ul>
+                <li>**المعلومات الشخصية:** أثناء استخدامك لخدمتنا، قد نطلب منك تزويدنا بمعلومات تعريف شخصية معينة يمكن استخدامها للتواصل معك أو تحديد هويتك، مثل الاسم، البريد الإلكتروني، وعنوان الشحن عند إجراء طلب شراء.</li>
+                <li>**بيانات الاستخدام:** قد نجمع أيضاً معلومات حول كيفية الوصول إلى الخدمة واستخدامها ("بيانات الاستخدام"). قد تشمل بيانات الاستخدام معلومات مثل عنوان بروتوكول الإنترنت لجهاز الكمبيوتر الخاص بك (مثل عنوان IP)، نوع المتصفح، صفحات خدمتنا التي تزورها، وقت وتاريخ زيارتك، والوقت الذي تقضيه في تلك الصفحات.</li>
+            </ul>
+
+            <h2>2. ملفات تعريف الارتباط (Cookies)</h2>
+            <p>
+                نستخدم ملفات تعريف الارتباط وتقنيات تتبع مماثلة لتتبع النشاط على خدمتنا والاحتفاظ ببعض المعلومات. ملفات تعريف الارتباط هي ملفات تحتوي على كمية صغيرة من البيانات التي قد تتضمن مُعرّفاً فريداً مجهولاً.
+            </p>
+            <ul>
+                <li>نستخدمها لتذكر تفضيلاتك وتسهيل عملية تسجيل الدخول وتخصيص تجربتك.</li>
+                <li>يمكنك توجيه متصفحك لرفض جميع ملفات تعريف الارتباط أو للإشارة إلى وقت إرسال ملف تعريف الارتباط.</li>
+            </ul>
+
+            <h2>3. أمن البيانات</h2>
+            <p>
+                أمن بياناتك مهم بالنسبة لنا، ولكن تذكر أنه لا توجد طريقة نقل عبر الإنترنت أو طريقة تخزين إلكتروني آمنة بنسبة 100%. في حين أننا نسعى جاهدين لاستخدام وسائل مقبولة تجارياً لحماية معلوماتك الشخصية، لا يمكننا ضمان أمنها المطلق.
+            </p>
+
+            <h2>4. الروابط إلى مواقع أخرى</h2>
+            <p>
+                قد تحتوي خدمتنا على روابط لمواقع أخرى لا يتم تشغيلها من قبلنا. إذا قمت بالنقر فوق رابط طرف ثالث، فسيتم توجيهك إلى موقع ذلك الطرف الثالث. ننصحك بشدة بمراجعة سياسة الخصوصية لكل موقع تزوره.
+            </p>
+
+            <h2>5. التغييرات على سياسة الخصوصية هذه</h2>
+            <p>
+                قد نقوم بتحديث سياسة الخصوصية الخاصة بنا من وقت لآخر. سنعلمك بأي تغييرات عن طريق نشر سياسة الخصوصية الجديدة على هذه الصفحة وتحديث "تاريخ السريان" في الأعلى.
+            </p>
+            
+        </div>
+    </main>
+    
+    <hr style="border-top: 2px solid var(--color-brand-primary); width: 60%; margin: 30px auto 15px; opacity: 0.3;">
+    
+    <footer class="main-footer" id="contact-footer">
+        <div class="container text-center">
+             <div class="social-icons">
+                <a href="https://www.facebook.com/" target="_blank" title="Facebook Page"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/" target="_blank" title="X / Twitter Page"><i class="fab fa-twitter"></i></a>
+                 <a href="https://telegram.org/" target="_blank" title="Telegram Page"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://www.youtube.com/" target="_blank" title="YouTube Channel"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="font-size: 14px; margin-bottom: 5px;">
+                <a href="privacy-policy.html" style="text-decoration: none;">سياسة الخصوصية</a>
+                <span style="margin: 0 10px; color: #555555;">|</span>
+                 <a href="contact.html" style="text-decoration: none;">اتصل بنا</a>
+            </p>
+            <p class="mb-0" style="font-size: 14px; color: #555555;">
+            جميع الحقوق محفوظة &copy;  <span id="current-year"></span>-M.M.S.ALMKHDRI
+            </p>
+        </div>
+    </footer>
+
+    <button onclick="topFunction()" id="backToTop" title="العودة للأعلى">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <script>
+        // دالة العودة للأعلى
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+        // تحديث السنة في الفوتر
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
