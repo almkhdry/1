@@ -25,7 +25,7 @@
             box-sizing: inherit;
         }
 
-        /* تعريف الألوان الجديدة (تم تغيير لون الهيدر والفوتر إلى أهدأ) */
+        /* تعريف الألوان الجديدة */
         :root {
             --color-brand-primary: #DAA520; /* اللون الذهبي الأصلي */
             --color-light-gold: #EEDD82; /* لون ذهبي أفتح للحدود (أكثر نعومة) */
@@ -44,6 +44,10 @@
             background-repeat: no-repeat; 
             background-color: var(--color-section-bg); 
             overflow-x: hidden; 
+            
+            /* 🚀 التعديل الهام لحل مشكلة الهامش السفلي: إلغاء أي هامش تلقائي */
+            margin: 0; 
+            padding: 0;
         }
         
         /* ==================================== */
@@ -192,6 +196,34 @@
         }
         .main-footer .social-icons a i {
              color: var(--color-brand-primary); 
+        }
+
+        /* 🚀 التعديل الهام لتوضيح زر العودة للأعلى */
+        #backToTop {
+            /* زيادة الحجم لجذب الانتباه */
+            width: 45px; 
+            height: 45px;
+            font-size: 18px; 
+            
+            /* لون خلفية أكثر وضوحاً */
+            background-color: var(--color-brand-primary); /* الذهبي */
+            color: white; /* لون النص أبيض */
+            
+            /* إضافة ظل واضح */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+            
+            /* ضمان أنه في أقصى اليمين وأعلى من أي شيء آخر */
+            right: 15px; 
+            bottom: 15px;
+            z-index: 1000; 
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            display: none;
+        }
+        #backToTop:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
