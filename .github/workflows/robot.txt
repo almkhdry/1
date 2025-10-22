@@ -1,7 +1,7 @@
 User-agent: *
 # السماح لجميع روبوتات الزحف (Google, Bing, إلخ) بالتعامل مع الموقع
 
-Disallow: /admin/
+Disallow: /https://almkhdry.github.io/1/
 # منع فهرسة صفحات الإدارة أو لوحات التحكم
 
 Disallow: /temp/
@@ -15,5 +15,4 @@ Allow: /appcategory-apple.html
 Allow: /app/category-samsung.html
 Allow: /app/category-xiaomi-vivo.html
 Allow: /app/accessories.html
-Sitemap: https://lionfoox.github.io/mw/sitemap.xml
-# التأكد من أن هذا الرابط يقود إلى الملف الذي رفعته أعلاه
+Sitemap: /https://almkhdry.github.io/1/sitemap.xml
